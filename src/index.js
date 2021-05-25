@@ -1,15 +1,22 @@
-const daysRef = document.querySelector('[data-value="days"]');
-const hoursRef = document.querySelector('[data-value="hours"]');
-const minsRef = document.querySelector('[data-value="mins"]');
-const secsRef = document.querySelector('[data-value="secs"]');
-
 class CountdownTimer {
     constructor({ selector, targetDate }) {
-        this.selector = selector;
+        this.elementsRefs = this.getElements(selector);
         this.date = targetDate;
-        this.render();
+        this.render(this.elementsRefs);
         this.run();
     }
+
+    getElements(timerId) {
+        const refs = {
+            dayCell: document.querySelector(`${timerId} [data-value="days"]`),
+            hourCell: document.querySelector(`${timerId} [data-value="hours"]`),
+            minCell: document.querySelector(`${timerId} [data-value="mins"]`),
+            secsCell: document.querySelector(`${timerId} [data-value="secs"]`),
+        };
+
+        return refs;
+    };
+
     countDate() {
         const time = new Date(this.date) - Date.now();
         const days = Math.floor(time / (1000 * 60 * 60 * 24));
@@ -20,16 +27,14 @@ class CountdownTimer {
         const secs = Math.floor((time % (1000 * 60)) / 1000);
         return { days, hours, mins, secs };
     }
-    render() {
-        const days = document.querySelector('span[data-value="days"]');
-        const hours = document.querySelector('span[data-value="hours"]');
-        const mins = document.querySelector('span[data-value="mins"]');
-        const secs = document.querySelector('span[data-value="secs"]');
+
+    render({ daysCell, hoursCell, minsCell, secsCell }) {
         const time = this.countDate();
-        days.textContent = String(time.days).padStart(2, '0');
-        hours.textContent = String(time.hours).padStart(2, '0');
-        mins.textContent = String(time.mins).padStart(2, '0');
-        secs.textContent = String(time.secs).padStart(2, '0');
+        console.log(this.elementsRefs);
+        daysCell.textContent = String(time.days).padStart(2, '0');
+        hoursCell = String(time.hours).padStart(2, '0');
+        minsCell = String(time.mins).padStart(2, '0');
+        secsCell = String(time.secs).padStart(2, '0');
     }
     run() {
         const deadline = Date.parse(this.date) <= Date.parse(new Date());
